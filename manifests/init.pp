@@ -75,6 +75,8 @@
 # * `version`
 #   The version of Vault to install
 #
+# * `manage_vault_utils`
+#   Instruct puppet to manage the additional utilities like openssl and jq
 # == Class vault::initialize
 # * `initialize_vault`
 #   If set to true, will initialize vault after installation.  Keys and tokens
@@ -168,6 +170,7 @@ class vault (
   Optional[Array[String]]    $vault_keys                = undef,
   Optional[Hash]             $vault_policies            = $vault::params::default_policies,
   String                     $version                   = '1.3.2',
+  Boolean                    $manage_vault_utils        = true,
 ) inherits vault::params {
 
   $_download_url     = "${download_url_base}${version}"
@@ -176,7 +179,9 @@ class vault (
   $vault_address     = "${ip_address}:${port}"
   $_vault_utils      = [ 'openssl', 'jq' ]
 
-  package { $_vault_utils: ensure => present }
+  if $manage_vault_utils {
+    package { $_vault_utils: ensure => present }
+  }
 
   contain vault::install
   contain vault::config
