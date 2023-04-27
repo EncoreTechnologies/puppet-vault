@@ -88,6 +88,10 @@
 # * `min_keys`
 #   The minimum number of keys needed to unseal Vault (Default: 2).
 #
+# * `published_url`
+#   URL applied to SSL certificates for CRL and CA certificate.
+#   Ex: http://vault.domain.com
+#
 # == PKI Options
 # * cert_params options
 #   The following are optional parameters that can be passed to vault::pki::gen_cert resource.
@@ -171,12 +175,13 @@ class vault (
   Optional[Hash]             $vault_policies            = $vault::params::default_policies,
   String                     $version                   = '1.3.2',
   Boolean                    $manage_vault_utils        = true,
+  Optional[String]           $published_url             = undef,
 ) inherits vault::params {
 
   $_download_url     = "${download_url_base}${version}"
   $_download_file    = "${package_name}_${version}_${os}_${arch}.${download_extension}"
   $real_download_url = pick($download_url, "${_download_url}/${_download_file}")
-  $vault_address     = "${ip_address}:${port}"
+  $vault_address     = "http://${ip_address}:${port}"
   $_vault_utils      = [ 'openssl', 'jq' ]
 
   if $manage_vault_utils {

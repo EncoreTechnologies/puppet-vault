@@ -80,13 +80,15 @@ define vault::pki::int_ca (
     }
   }
 
+  $_published_url = pick($published_url, $vault_addr)
+
   ## Configure intermediate CA urls
   vault::pki::config { $path:
     action  => 'write',
     path    => "${path}/config/urls",
     options => {
-      'issuing_certificates'    => "http://${vault_addr}/v1/${path}/ca/pem",
-      'crl_distribution_points' => "http://${vault_addr}/v1/${path}/crl/pem",
+      'issuing_certificates'    => "$_published_url/v1/${path}/ca/pem",
+      'crl_distribution_points' => "$_published_url/v1/${path}/crl/pem",
       #'ocsp_servers'           => (slice),
     },
   }
