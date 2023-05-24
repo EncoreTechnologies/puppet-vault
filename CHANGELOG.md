@@ -1,8 +1,13 @@
 ## Development
 
 - Switch from Travis to GitHub Actions
-  
+
   Contributed by Nick Maludy (@nmaludy)
+  Contributed by Rick Paxton (@paxri01)
+
+## 2023-05-24 2.4.0
+- Added parameter for certificate published URLs.
+- Fix idempotency
 
 ## 2020-02-01 2.3.0
 - Moved directory check out of type definition to provider so that it is checking when at
