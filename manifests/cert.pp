@@ -63,7 +63,7 @@ define vault::cert (
 
   #notify { "DEBUG::vault::cert:\n ${debug}": }
 
-  ensure_resource('vault_cert', $_cert_path,
+  ensure_resource('vault_cert', $title,
     {
       ensure              => $ensure,
       common_name         => $common_name,
@@ -79,7 +79,7 @@ define vault::cert (
       api_secret_role     => $api_secret_role,
       api_server          => $api_server,
       cert                => $cert,
-      cert_name           => $cert_name,
+      #cert_name           => $cert_name,
       cert_dir            => $_cert_dir,
       cert_ttl            => $cert_ttl,
       priv_key            => $priv_key,
@@ -95,7 +95,7 @@ define vault::cert (
       owner     => $cert_owner,
       group     => $cert_group,
       mode      => $cert_mode,
-      subscribe => Vault_cert[$_cert_path],
+      subscribe => Vault_cert[$title],
     }
 
     $_priv_key_owner = pick($priv_key_owner, $cert_owner)
@@ -105,7 +105,7 @@ define vault::cert (
       owner     => $_priv_key_owner,
       group     => $_priv_key_group,
       mode      => $priv_key_mode,
-      subscribe => Vault_cert[$_cert_path],
+      subscribe => Vault_cert[$title],
     }
   }
 }
