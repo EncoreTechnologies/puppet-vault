@@ -19,8 +19,8 @@ Puppet::Type.type(:vault_cert).provide(:openssl, parent: Puppet::Provider::Vault
   ##########################
   # public methods inherited from Puppet::Provider
   def exists?
-#    Puppet.notice("cert - exists - resource = #{resource.inspect}")
-#    Puppet.notice("cert - exists - resource = #{@resource.inspect}")
+    #    Puppet.notice("cert - exists - resource = #{resource.inspect}")
+    #    Puppet.notice("cert - exists - resource = #{@resource.inspect}")
     cert = certificate
     priv_key = private_key
     # Check for the certificate existing at all

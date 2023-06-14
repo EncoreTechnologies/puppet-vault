@@ -25,11 +25,4 @@
 .project
 .envrc
 /inventory.yaml
-.rerun.json
-.librarian
-.kitchen
-.tmp
-.bundle
-bolt.log
-Puppetfile.lock
-modules
+/spec/fixtures/litmus_inventory.yaml

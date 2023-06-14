@@ -65,7 +65,7 @@ Puppet::Functions.create_function(:'vault::cert') do
       Puppet.debug('serial number wasnt pass in, looking it up in facts')
       cert_name = params['cert_name']
       Puppet.debug("cert_name: #{cert_name}")
-      # note: closure_scope is a special Puppet method for accessing the scope of the function
+      # NOTE: closure_scope is a special Puppet method for accessing the scope of the function
       # see: https://puppet.com/docs/puppet/latest/functions_ruby_implementation.html
       # It is only able to access global variables, like facts
       vault_existing_certs = closure_scope['facts']['vault_existing_certs']

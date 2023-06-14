@@ -1,8 +1,14 @@
 ## Development
 
 - Switch from Travis to GitHub Actions
-  
+
   Contributed by Nick Maludy (@nmaludy)
+
+## 2023-06-14 2.4.0
+- Updated PDK and fix lint errors
+- Commented out $cert_name as this is overwritten by vault_cert.rb
+- Updated metadata information
+- TODO: Fix spec tests
 
 ## 2020-02-01 2.3.0
 - Moved directory check out of type definition to provider so that it is checking when at

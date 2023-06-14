@@ -1,4 +1,4 @@
-# == Class vault::install
+# @summary Class vault::install
 #
 class vault::install {
   $vault_bin = "${vault::install_dir}/bin/vault"
@@ -25,25 +25,25 @@ class vault::install {
   }
 
   case $vault::install_method {
-      'archive': {
-        if $vault::manage_download_dir {
-          file { $vault::download_dir:
-            ensure => directory,
-          }
+    'archive': {
+      if $vault::manage_download_dir {
+        file { $vault::download_dir:
+          ensure => directory,
         }
-
-        archive { "${vault::download_dir}/${vault::download_filename}":
-          ensure       => present,
-          extract      => true,
-          extract_path => "${vault::install_dir}/bin",
-          source       => $vault::real_download_url,
-          cleanup      => true,
-          creates      => $vault_bin,
-          before       => File['vault_binary'],
-        }
-
-        $_manage_file_capabilities = true
       }
+
+      archive { "${vault::download_dir}/${vault::download_filename}":
+        ensure       => present,
+        extract      => true,
+        extract_path => "${vault::install_dir}/bin",
+        source       => $vault::real_download_url,
+        cleanup      => true,
+        creates      => $vault_bin,
+        before       => File['vault_binary'],
+      }
+
+      $_manage_file_capabilities = true
+    }
 
     'repo': {
       package { $vault::package_name:
@@ -58,7 +58,7 @@ class vault::install {
   }
 
   file { 'vault_binary':
-    path  =>  $vault_bin,
+    path  => $vault_bin,
     owner => 'root',
     group => 'root',
     mode  => '0755',

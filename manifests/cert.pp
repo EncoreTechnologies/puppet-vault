@@ -1,5 +1,62 @@
 # @summary a vault certificate that also amanges the ownership and mode of the generated
 #          certificate files (for use on Linux)
+# @param ensure
+#   TODO
+# @param api_server
+#   TODO
+# @param api_secret_role
+#   TODO
+# @param common_name
+#   TODO
+# @param alt_names
+#   TODO
+# @param ip_sans
+#   TODO
+# @param api_auth_method
+#   TODO
+# @param api_auth_parameters
+#   TODO
+# @param api_auth_path
+#   TODO
+# @param api_auth_token
+#   TODO
+# @param api_port
+#   TODO
+# @param api_scheme
+#   TODO
+# @param api_secret_engine
+#   TODO
+# @param cert
+#   TODO
+# @param cert_dir
+#   TODO
+# @param cert_group
+#   TODO
+# @param cert_owner
+#   TODO
+# @param cert_mode
+#   TODO
+# @param cert_name
+#   TODO
+# @param cert_ttl
+#   TODO
+# @param priv_key
+#   TODO
+# @param priv_key_dir
+#   TODO
+# @param priv_key_group
+#   TODO
+# @param priv_key_owner
+#   TODO
+# @param priv_key_mode
+#   TODO
+# @param priv_key_name
+#   TODO
+# @param manage_files
+#   TODO
+# @param regenerate_ttl
+#   TODO
+#
 define vault::cert (
   String                   $ensure,
   String                   $api_server,
@@ -48,18 +105,18 @@ define vault::cert (
   $_priv_key_path = "${_priv_key_dir}/${_priv_key_file}"
 
   $debug = @("EOC")
-  Role: vault::cert
-         ensure: $ensure
-          title: $title
-    common_name: $common_name
-      alt_names: $alt_names
-        ip_sans: $ip_sans
-      cert_name: $cert_name
-     _cert_path: $_cert_path
-       key_name: $priv_key_name
-      _key_path: $_priv_key_path
+    Role: vault::cert
+           ensure: ${ensure}
+            title: ${title}
+      common_name: ${common_name}
+        alt_names: ${alt_names}
+          ip_sans: ${ip_sans}
+        cert_name: ${cert_name}
+       _cert_path: ${_cert_path}
+         key_name: ${priv_key_name}
+        _key_path: ${_priv_key_path}
 
-  |- EOC
+    |- EOC
 
   #notify { "DEBUG::vault::cert:\n ${debug}": }
 
@@ -79,6 +136,7 @@ define vault::cert (
       api_secret_role     => $api_secret_role,
       api_server          => $api_server,
       cert                => $cert,
+      # This is overwritten in vault_cert.rb, not needed
       #cert_name           => $cert_name,
       cert_dir            => $_cert_dir,
       cert_ttl            => $cert_ttl,
