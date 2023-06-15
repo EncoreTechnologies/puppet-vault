@@ -68,6 +68,9 @@
 # @param package_ensure
 # @param package_name
 # @param port
+# @param published_url
+#   URL applied to SSL certificates indicating CRL and CA distribution points.
+#   Ex: http://vault.domain.com
 # @param purge_config_dir
 #   Whether the `config_dir` should be purged before installing the
 #   generated config.
@@ -166,6 +169,7 @@ class vault (
   Enum['present','installed','absent','purged','latest'] $package_ensure = 'installed',
   String                     $package_name              = 'vault',
   String                     $port                      = $vault::params::vault_port,
+  Optional[String]           $published_url             = undef,
   Boolean                    $purge_config_dir          = true,
   Optional[Hash]             $root_ca_config            = undef,
   Optional[Hash]             $seal                      = $vault::params::seal,
@@ -188,7 +192,7 @@ class vault (
   $_download_url     = "${download_url_base}${version}"
   $_download_file    = "${package_name}_${version}_${os}_${arch}.${download_extension}"
   $real_download_url = pick($download_url, "${_download_url}/${_download_file}")
-  $vault_address     = "${ip_address}:${port}"
+  $vault_address     = "http://${ip_address}:${port}"
   $_vault_utils      = ['openssl','jq']
 
   if $manage_vault_utils {

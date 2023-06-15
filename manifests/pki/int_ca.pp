@@ -8,6 +8,7 @@ define vault::pki::int_ca (
   Boolean             $enable_root_ca        = $vault::enable_root_ca,
   Optional[Hash]      $options               = undef,
   String              $path                  = undef,
+  Optional[String]    $published_url         = undef,
   Optional[String]    $role_name             = undef,
   Optional[Hash]      $role_options          = undef,
   String              $root_path             = 'root_ca',
@@ -83,12 +84,13 @@ define vault::pki::int_ca (
   }
 
   ## Configure intermediate CA urls
+  $_published_url = pick($published_url, $vault_addr)
   vault::pki::config { $path:
     action  => 'write',
     path    => "${path}/config/urls",
     options => {
-      'issuing_certificates'    => "http://${vault_addr}/v1/${path}/ca/pem",
-      'crl_distribution_points' => "http://${vault_addr}/v1/${path}/crl/pem",
+      'issuing_certificates'    => "${_published_url}/v1/${path}/ca/pem",
+      'crl_distribution_points' => "${_published_url}/v1/${path}/crl/pem",
       #'ocsp_servers'           => (slice),
     },
   }
