@@ -1,6 +1,10 @@
-# == Class vault::manage::initialize
+# @summary This class is called from vault to initialize vault after installation.
 #
-#  This class is called from vault to initialize vault after installation.
+# @param bin_dir
+# @param minimum_keys
+# @param total_keys
+# @param vault_dir
+# @param vault_token
 #
 class vault::config::initialize (
   String              $bin_dir        = $vault::bin_dir,
@@ -9,7 +13,6 @@ class vault::config::initialize (
   String              $vault_dir      = $vault::install_dir,
   Optional[String]    $vault_token    = $vault::token,
 ) inherits vault {
-
   $_init_cmd = @("EOC")
     bash -lc "${bin_dir}/vault operator init \
       -key-shares=${total_keys} \
@@ -43,7 +46,6 @@ class vault::config::initialize (
 
   ## Set vault token in home directory
   if empty($vault_token) {
-
     # Look for root token in vault_init.txt if $vault_token undef
     $_set_token_cmd = @("EOC"/$)
       grep 'Root Token' "${vault_dir}/vault_init.txt" |\
@@ -55,9 +57,7 @@ class vault::config::initialize (
       path    => '/bin',
       creates => '/root/.vault-token',
     }
-
   } else {
-
     # Set vault token to defined $vault_token
     file { '/root/.vault-token':
       ensure  => file,
@@ -66,9 +66,7 @@ class vault::config::initialize (
       group   => root,
       mode    => '0600',
     }
-
   }
 
   contain vault::config::unseal
-
 }

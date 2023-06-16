@@ -1,14 +1,16 @@
-# @api private == Class to create and configure root certificate of authority
+# @summary Class to create and configure root certificate of authority
+#
+# @api private
+#
 define vault::pki::root_ca (
   Optional[Hash]      $cert_options          = undef,
   String              $common_name           = undef,
   String              $path                  = undef,
   Optional[String]    $role_name             = undef,
   Optional[Hash]      $role_options          = undef,
-  Optional[String]    $ttl                   = '720h',
+  String              $ttl                   = '720h',
   String              $vault_addr            = $vault::vault_address,
 ) {
-
   ## Initialize pki secrets engine
   vault::secrets::engine { $path:
     engine  => 'pki',
@@ -45,5 +47,4 @@ define vault::pki::root_ca (
       options => $role_options,
     }
   }
-
 }

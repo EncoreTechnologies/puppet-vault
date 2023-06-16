@@ -1,22 +1,21 @@
-# == Class vault::config
-#
-# This class is called from vault for service config.
+# @summary This class is called from vault for service config.
 #
 class vault::config {
-
-  $_config_hash = delete_undef_values({
-    'listener'          => $vault::listener,
-    'storage'           => $vault::storage,
-    'ha_storage'        => $vault::ha_storage,
-    'seal'              => $vault::seal,
-    'telemetry'         => $vault::telemetry,
-    'disable_cache'     => $vault::disable_cache,
-    'default_lease_ttl' => $vault::default_lease_ttl,
-    'max_lease_ttl'     => $vault::max_lease_ttl,
-    'disable_mlock'     => $vault::disable_mlock,
-    'ui'                => $vault::enable_ui,
-    'api_addr'          => $vault::api_addr,
-  })
+  $_config_hash = delete_undef_values(
+    {
+      'listener'          => $vault::listener,
+      'storage'           => $vault::storage,
+      'ha_storage'        => $vault::ha_storage,
+      'seal'              => $vault::seal,
+      'telemetry'         => $vault::telemetry,
+      'disable_cache'     => $vault::disable_cache,
+      'default_lease_ttl' => $vault::default_lease_ttl,
+      'max_lease_ttl'     => $vault::max_lease_ttl,
+      'disable_mlock'     => $vault::disable_mlock,
+      'ui'                => $vault::enable_ui,
+      'api_addr'          => $vault::api_addr,
+    }
+  )
 
   $config_hash = merge($_config_hash, $vault::extra_config)
 
@@ -56,7 +55,7 @@ class vault::config {
   # If a value is passed, it will be interpretted as a boolean.
   if $vault::manage_service_file == undef {
     case $vault::install_method {
-      'archive': { $real_manage_service_file = true  }
+      'archive': { $real_manage_service_file = true }
       'repo':    { $real_manage_service_file = false }
       default:   { $real_manage_service_file = false }
     }
@@ -84,7 +83,7 @@ class vault::config {
         }
       }
       'systemd': {
-        systemd::unit_file{'vault.service':
+        systemd::unit_file { 'vault.service':
           content => template('vault/vault.systemd.erb'),
         }
       }
