@@ -123,7 +123,8 @@ define vault::cert (
   ensure_resource('vault_cert', $title,
     {
       ensure              => $ensure,
-      common_name         => $common_name,
+      # This is overwritten in vault_cert.rb, not needed
+      #common_name         => $common_name,
       alt_names           => $alt_names,
       ip_sans             => $ip_sans,
       api_auth_method     => $api_auth_method,
@@ -136,8 +137,7 @@ define vault::cert (
       api_secret_role     => $api_secret_role,
       api_server          => $api_server,
       cert                => $cert,
-      # This is overwritten in vault_cert.rb, not needed
-      #cert_name           => $cert_name,
+      cert_name           => $cert_name,
       cert_dir            => $_cert_dir,
       cert_ttl            => $cert_ttl,
       priv_key            => $priv_key,
