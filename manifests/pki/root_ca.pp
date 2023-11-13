@@ -6,6 +6,7 @@ define vault::pki::root_ca (
   Optional[Hash]      $cert_options          = undef,
   String              $common_name           = undef,
   String              $path                  = undef,
+  Optional[String]    $published_url         = undef,
   Optional[String]    $role_name             = undef,
   Optional[Hash]      $role_options          = undef,
   String              $ttl                   = '720h',
@@ -29,12 +30,13 @@ define vault::pki::root_ca (
   }
 
   ## Configure root CA urls
+  $_published_url = pick($published_url, $facts['networking']['ip'])
   vault::pki::config { $path:
     action  => 'write',
     path    => "${path}/config/urls",
     options => {
-      'issuing_certificates'    => "http://${vault_addr}/v1/${path}/ca/pem",
-      'crl_distribution_points' => "http://${vault_addr}/v1/${path}/crl/pem",
+      'issuing_certificates'    => "http://${_published_url}/v1/${path}/ca/pem",
+      'crl_distribution_points' => "http://${_published_url}/v1/${path}/crl/pem",
       #'ocsp_servers'           => (slice),
     },
   }
