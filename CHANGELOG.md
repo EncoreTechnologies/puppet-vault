@@ -4,6 +4,9 @@
 
   Contributed by Nick Maludy (@nmaludy)
 
+## 2023-10-15 2.5.0
+- Fix CA and CRL path URLs
+
 ## 2023-06-14 2.4.0
 - Add parameters for certificate published URLs
 - Fix idempotency
