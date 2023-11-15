@@ -84,7 +84,7 @@ define vault::pki::int_ca (
   }
 
   ## Configure intermediate CA urls
-  $_published_url = pick($published_url, $vault_addr)
+  $_published_url = pick($published_url, $facts['networking']['ip'])
   vault::pki::config { $path:
     action  => 'write',
     path    => "${path}/config/urls",
