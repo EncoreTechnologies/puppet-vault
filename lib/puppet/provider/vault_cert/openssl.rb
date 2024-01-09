@@ -102,8 +102,25 @@ Puppet::Type.type(:vault_cert).provide(:openssl, parent: Puppet::Provider::Vault
   def client_cert_save(cert)
     # Get the cert path from the directory and name
     # Save the new cert in the certs directory on the client server
+    signed_cert = cert['data']['certificate']
+
+    # append the CA chain to the signed cert
+    if cert['data'].has_key?('ca_chain')
+      cert_ca_chain = cert['data']['ca_chain']
+      if cert_ca_chain.is_a?(Array)
+        for ca in cert_ca_chain
+          signed_cert += ca
+          if not signed_cert.end_with?("\n")
+            signed_cert += "\n"
+          end
+        end
+      else
+        signed_cert += cert_ca_chain
+      end
+    end
+
     write_file(resource[:cert_dir], resource[:cert_name],
-               cert['data']['certificate'])
+               signed_cert)
 
     # Get the private key path from the directory and name
     # Save the new private key in the tls directory on the client
