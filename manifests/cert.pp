@@ -73,34 +73,53 @@ define vault::cert (
     default => "${_cert_dir}/${cert_name}",
   }
 
-  $_priv_key_dir = pick($priv_key_dir, $vault::params::priv_key_dir)
-  $_cert_no_ext = basename($cert_name, stdlib::extname($cert_name))
+  $_priv_key_dir  = pick($priv_key_dir, $vault::params::priv_key_dir)
+  $_cert_no_ext   = basename($cert_name, stdlib::extname($cert_name))
   $_priv_key_file = pick($priv_key_name, "${_cert_no_ext}.key")
   $_priv_key_path = "${_priv_key_dir}/${_priv_key_file}"
 
-  vault_cert { $title:
-    ensure              => $ensure,
-    common_name         => $common_name,
-    alt_names           => $alt_names,
-    ip_sans             => $ip_sans,
-    api_auth_method     => $api_auth_method,
-    api_auth_parameters => $api_auth_parameters,
-    api_auth_path       => $api_auth_path,
-    api_auth_token      => $api_auth_token,
-    api_port            => $api_port,
-    api_scheme          => $api_scheme,
-    api_secret_engine   => $api_secret_engine,
-    api_secret_role     => $api_secret_role,
-    api_server          => $api_server,
-    cert                => $cert,
-    cert_name           => $cert_name,
-    cert_dir            => $_cert_dir,
-    cert_ttl            => $cert_ttl,
-    priv_key            => $priv_key,
-    priv_key_name       => $priv_key_name,
-    priv_key_dir        => $_priv_key_dir,
-    regenerate_ttl      => $regenerate_ttl,
-  }
+  $debug = @("EOC")
+    Role: vault::cert
+           ensure: ${ensure}
+            title: ${title}
+      common_name: ${common_name}
+        alt_names: ${alt_names}
+          ip_sans: ${ip_sans}
+        cert_name: ${cert_name}
+       _cert_path: ${_cert_path}
+         key_name: ${priv_key_name}
+        _key_path: ${_priv_key_path}
+
+    |- EOC
+
+  #notify { "DEBUG::vault::cert:\n ${debug}": }
+
+  ensure_resource('vault_cert', $title,
+    {
+      ensure              => $ensure,
+      common_name         => $common_name,
+      alt_names           => $alt_names,
+      ip_sans             => $ip_sans,
+      api_auth_method     => $api_auth_method,
+      api_auth_parameters => $api_auth_parameters,
+      api_auth_path       => $api_auth_path,
+      api_auth_token      => $api_auth_token,
+      api_port            => $api_port,
+      api_scheme          => $api_scheme,
+      api_secret_engine   => $api_secret_engine,
+      api_secret_role     => $api_secret_role,
+      api_server          => $api_server,
+      cert                => $cert,
+      # This is overwritten in vault_cert.rb, not needed
+      #cert_name           => $cert_name,
+      cert_dir            => $_cert_dir,
+      cert_ttl            => $cert_ttl,
+      priv_key            => $priv_key,
+      priv_key_name       => $priv_key_name,
+      priv_key_dir        => $_priv_key_dir,
+      regenerate_ttl      => $regenerate_ttl,
+    }
+  )
 
   if $manage_files and $facts['os']['family'] != 'windows' {
     file { $_cert_path:

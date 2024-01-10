@@ -423,6 +423,50 @@ Style/HashTransformKeys:
   Enabled: false
 Style/HashTransformValues:
   Enabled: false
+Style/BisectedAttrAccessor:
+  Enabled: false
+Style/CaseLikeIf:
+  Enabled: false
+Style/ClassEqualityComparison:
+  Enabled: false
+Style/ColonMethodDefinition:
+  Enabled: false
+Style/CombinableLoops:
+  Enabled: false
+Style/CommentedKeyword:
+  Enabled: false
+Style/Dir:
+  Enabled: false
+Style/DoubleCopDisableDirective:
+  Enabled: false
+Style/EmptyBlockParameter:
+  Enabled: false
+Style/EmptyLambdaParameter:
+  Enabled: false
+Style/Encoding:
+  Enabled: false
+Style/EvalWithLocation:
+  Enabled: false
+Style/ExpandPathArguments:
+  Enabled: false
+Style/ExplicitBlockArgument:
+  Enabled: false
+Style/ExponentialNotation:
+  Enabled: false
+Style/FloatDivision:
+  Enabled: false
+Style/FrozenStringLiteralComment:
+  Enabled: false
+Style/GlobalStdStream:
+  Enabled: false
+Style/HashAsLastArrayItem:
+  Enabled: false
+Style/HashLikeCase:
+  Enabled: false
+Style/HashTransformKeys:
+  Enabled: false
+Style/HashTransformValues:
+  Enabled: false
 Style/IfUnlessModifier:
   Enabled: false
 Style/KeywordParametersOrder:

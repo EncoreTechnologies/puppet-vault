@@ -13,6 +13,17 @@
 - Added parameter for certificate published URLs.
 - Fix idempotency
 
+## 2023-10-15 2.5.0
+- Fix CA and CRL path URLs
+
+## 2023-06-14 2.4.0
+- Add parameters for certificate published URLs
+- Fix idempotency
+- Updated PDK and fix lint errors
+- Commented out $cert_name as this is overwritten by vault_cert.rb
+- Updated metadata information
+- TODO: Fix spec tests
+
 ## 2020-02-01 2.3.0
 - Moved directory check out of type definition to provider so that it is checking when at
   execution not before since directory may be created during the profile run

@@ -77,7 +77,7 @@ Puppet::Type.type(:vault_cert).provide(:powershell, parent: Puppet::Provider::Va
         (certificate_list.first['thumbprint'] != thumbprint ||
          certificate_list.first['serial_number'] != serial_number))
       Puppet.debug("A certificate with the same cert name (FriendlyName) exists, but doesn't match our thumbprint and serial number, we're going to delete these old one(s)")
-      # Note: we _could_ try to keep some certs here, but this adds a ton of additional
+      # NOTE: we _could_ try to keep some certs here, but this adds a ton of additional
       # complexity, like... which ones should we keep, what if the ones we're trying to
       # keep is expired, revoked, etc. Easiest thing is to just revoke and remove all
       # of the certs and make a new one.
