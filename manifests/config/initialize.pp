@@ -1,10 +1,6 @@
-# @summary This class is called from vault to initialize vault after installation.
+# @summary Private class to initalize vault after installation.
 #
-# @param bin_dir
-# @param minimum_keys
-# @param total_keys
-# @param vault_dir
-# @param vault_token
+# @api private
 #
 class vault::config::initialize (
   String              $bin_dir        = $vault::bin_dir,
@@ -13,6 +9,7 @@ class vault::config::initialize (
   String              $vault_dir      = $vault::install_dir,
   Optional[String]    $vault_token    = $vault::token,
 ) inherits vault {
+#
   $_init_cmd = @("EOC")
     bash -lc "${bin_dir}/vault operator init \
       -key-shares=${total_keys} \

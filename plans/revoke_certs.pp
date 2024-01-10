@@ -1,12 +1,11 @@
-# @summary Revoke certs for a set of targets
+# @summary Revoke certs for a set of targets.
 #
 # @example
-#   $ bolt plan run vault::revoke_certs --targets xxx --params '{ \
-#     "server": "vault.domain.tld", "secret_role": "domain.tld", \
-#     "auth_method": "ldap", "auth_parameters": { \
-#       "username": "username@domain.tld", "password": "xxx" } }'
+#   $ bolt plan run vault::revoke_certs --targets xxx \
+#     --params '{"server": "vault.domain.tld", "secret_role": "domain.tld", "auth_method": "ldap", \
+#     "auth_parameters": {"username": "username@domain.tld", "password": "xxx"}}'
 #
-plan vault::revoke_certs(
+plan vault::revoke_certs (
   String $server,
   String $auth_method,
   String $secret_role,

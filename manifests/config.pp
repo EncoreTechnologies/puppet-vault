@@ -1,4 +1,6 @@
-# @summary This class is called from vault for service config.
+# @summary Class to configure vault service.
+#
+# @api private
 #
 class vault::config {
   $_config_hash = delete_undef_values(

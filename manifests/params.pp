@@ -1,5 +1,4 @@
-# @summary This class is meant to be called from vault.
-#   It sets variables according to platform.
+# @summary Private class to configure parameters.
 #
 class vault::params {
   $install_dir        = '/opt/vault'

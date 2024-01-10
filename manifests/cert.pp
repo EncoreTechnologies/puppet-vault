@@ -1,61 +1,34 @@
-# @summary a vault certificate that also amanges the ownership and mode of the generated
+# @summary a vault certificate that also manages the ownership and mode of the generated
 #          certificate files (for use on Linux)
+#
 # @param ensure
-#   TODO
 # @param api_server
-#   TODO
 # @param api_secret_role
-#   TODO
 # @param common_name
-#   TODO
 # @param alt_names
-#   TODO
 # @param ip_sans
-#   TODO
 # @param api_auth_method
-#   TODO
 # @param api_auth_parameters
-#   TODO
 # @param api_auth_path
-#   TODO
 # @param api_auth_token
-#   TODO
 # @param api_port
-#   TODO
 # @param api_scheme
-#   TODO
 # @param api_secret_engine
-#   TODO
 # @param cert
-#   TODO
 # @param cert_dir
-#   TODO
 # @param cert_group
-#   TODO
 # @param cert_owner
-#   TODO
 # @param cert_mode
-#   TODO
 # @param cert_name
-#   TODO
 # @param cert_ttl
-#   TODO
 # @param priv_key
-#   TODO
 # @param priv_key_dir
-#   TODO
 # @param priv_key_group
-#   TODO
 # @param priv_key_owner
-#   TODO
 # @param priv_key_mode
-#   TODO
 # @param priv_key_name
-#   TODO
 # @param manage_files
-#   TODO
 # @param regenerate_ttl
-#   TODO
 #
 define vault::cert (
   String                   $ensure,
@@ -92,7 +65,8 @@ define vault::cert (
   Optional[Integer]        $regenerate_ttl       = undef,
 ) {
   include vault::params
-  $_cert_dir  = pick($cert_dir, $vault::params::cert_dir)
+
+  $_cert_dir = pick($cert_dir, $vault::params::cert_dir)
   $_cert_path = stdlib::extname($cert_name) ? {
     ''      => "${_cert_dir}/${cert_name}.crt",
     undef   => "${_cert_dir}/${cert_name}.crt",

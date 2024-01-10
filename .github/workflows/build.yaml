@@ -24,6 +24,10 @@ jobs:
             puppet: "7.0"
             check: "check:symlinks check:git_ignore check:dot_underscore check:test_file rubocop syntax lint metadata_lint"
             name: 'static'
+          - ruby: '2.7'
+            puppet: "6.0"
+            check: "parallel_spec"
+            name: 'spec'
     env:
       CHECK: '${{ matrix.check }}'
       PUPPET_GEM_VERSION: '~> ${{ matrix.puppet }}'

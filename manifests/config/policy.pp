@@ -1,4 +1,4 @@
-# @summary Class vault::manage::policy
+# @summary Private define to configure vault policies.
 #
 # @api private
 #
@@ -9,6 +9,7 @@ define vault::config::policy (
   String              $user            = $vault::user,
   String              $vault_dir       = $vault::install_dir,
 ) {
+#
   $_policy_file = "${vault_dir}/scripts/${name}.hcl"
 
   ## Parse policy paths from input.
@@ -44,7 +45,7 @@ define vault::config::policy (
   exec { "write_${name}":
     command     => $_policy_write_cmd,
     #environment => [ "VAULT_TOKEN=${vault_token}" ],
-    path        => [$bin_dir,'/bin','/usr/bin'],
+    path        => [$bin_dir, '/bin', '/usr/bin'],
     refreshonly => true,
     provider    => 'shell',
     subscribe   => File[$_policy_file],

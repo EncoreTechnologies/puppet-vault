@@ -1,12 +1,21 @@
-# @summary Full description of class vault here.
+# Class: vault
+# ===========================
 #
-# @param api_addr
-#   Specifies the address (full URL) to advertise to other Vault servers in the
-#   cluster for client redirection. This value is also used for plugin backends.
-#   This can also be provided via the environment variable VAULT_API_ADDR. In
-#   general this should be set as a full URL that points to the value of the
-#   listener address (Example: http://vault.domain.com:8200).
-# @param arch
+# Full description of class vault here.
+#
+# Parameters
+# ----------
+#
+# @param install_dir
+#   The installation directory to install Vault to (Default: /opt/vault).
+# @param user
+#   Customise the user vault runs as, will also create the user unless `manage_user` is false.
+# @param manage_user
+#   Whether or not the module should create the user.
+# @param group
+#   Customise the group vault runs as, will also create the user unless `manage_group` is false.
+# @param manage_group
+#   Whether or not the module should create the group.
 # @param bin_dir
 #   Directory the vault executable will be linked to (Default: /usr/local/bin).
 # @param config_dir
@@ -14,31 +23,66 @@
 # @param config_mode
 #   TODO (REMOVE) Mode of the configuration file (config.json) (Default: '0750').
 #   Mode of the vault directories (Default: '0750').
+# @param purge_config_dir
+#   Whether the `config_dir` should be purged before installing the
+#   generated config.
+# @param download_url
+#   Manual URL to download the vault zip distribution from.
+# @param download_url_base
+#   Hashicorp base URL to download vault zip distribution from.
+# @param download_extension
+#   The extension of the vault download
+# @param service_name
+#   Customise the name of the system service
+# @param service_provider
+#   Customise the name of the system service provider; this
+#   also controls the init configuration files that are installed.
+# @param service_options
+#   Extra argument to pass to `vault server`, as per:
+#   `vault server --help`
+# @param manage_service
+#   Instruct puppet to manage service or not
+# @param num_procs
+#   Sets the GOMAXPROCS environment variable, to determine how many CPUs Vault
+#   can use. The official Vault Terraform install.sh script sets this to the
+#   output of ``nprocs``, with the comment, "Make sure to use all our CPUs,
+#   because Vault can block a scheduler thread". Default: number of CPUs
+#   on the system, retrieved from the ``processorcount`` Fact.
+# @param api_addr
+#   Specifies the address (full URL) to advertise to other Vault servers in the
+#   cluster for client redirection. This value is also used for plugin backends.
+#   This can also be provided via the environment variable VAULT_API_ADDR. In
+#   general this should be set as a full URL that points to the value of the
+#   listener address (Example: http://vault.domain.com:8200).
+# @param version
+#   The version of Vault to install
+# @param manage_vault_utils
+#   Instruct puppet to manage the additional utilities like openssl and jq
+# == Class vault::initialize
+# @param initialize_vault
+#   If set to true, will initialize vault after installation.  Keys and tokens
+#   are stored in $install_dir/vault_init.txt file.
+# @param total_keys
+#   Specify the total number of keys created to unseal Vault (Default: 5).
+# @param min_keys
+#   The minimum number of keys needed to unseal Vault (Default: 2).
+# @param published_url
+#   URL applied to SSL certificates for CRL and CA certificate.
+#   Ex: http://vault.domain.com
+#
+# @param arch
 # @param default_lease_ttl
 # @param disable_cache
 # @param disable_mlock
 # @param domain
 # @param download_dir
-# @param download_extension
-#   The extension of the vault download
 # @param download_filename
-# @param download_url
-#   Manual URL to download the vault zip distribution from.
-# @param download_url_base
-#   Hashicorp base URL to download vault zip distribution from.
 # @param enable_int_ca
 # @param enable_ldap
 # @param enable_root_ca
 # @param enable_ui
 # @param extra_config
-# @param group
-#   Customise the group vault runs as, will also create the user unless `manage_group` is false.
 # @param ha_storage
-# @param initialize_vault
-#   If set to true, will initialize vault after installation.  Keys and tokens
-#   are stored in $install_dir/vault_init.txt file.
-# @param install_dir
-#   The installation directory to install Vault to (Default: /opt/vault).
 # @param install_method
 # @param int_ca_config
 # @param ip_address
@@ -47,62 +91,22 @@
 # @param listener
 # @param manage_download_dir
 # @param manage_file_capabilities
-# @param manage_group
-#   Whether or not the module should create the group.
 # @param manage_service_file
-# @param manage_service
-#   Instruct puppet to manage service or not
 # @param manage_storage_dir
-# @param manage_user
-#   Whether or not the module should create the user.
 # @param max_lease_ttl
-# @param min_keys
-#   The minimum number of keys needed to unseal Vault (Default: 2).
-# @param num_procs
-#   Sets the GOMAXPROCS environment variable, to determine how many CPUs Vault
-#   can use. The official Vault Terraform install.sh script sets this to the
-#   output of ``nprocs``, with the comment, "Make sure to use all our CPUs,
-#   because Vault can block a scheduler thread". Default: number of CPUs
-#   on the system, retrieved from the ``processorcount`` Fact.
 # @param os
 # @param package_ensure
 # @param package_name
 # @param port
-# @param published_url
-#   URL applied to SSL certificates indicating CRL and CA distribution points.
-#   Ex: http://vault.domain.com
-# @param purge_config_dir
-#   Whether the `config_dir` should be purged before installing the
-#   generated config.
 # @param root_ca_config
 # @param seal
 # @param service_enable
 # @param service_ensure
-# @param service_name
-#   Customise the name of the system service
-# @param service_options
-#   Extra argument to pass to `vault server`, as per:
-#   `vault server --help`
-# @param service_provider
-#   Customise the name of the system service provider; this
-#   also controls the init configuration files that are installed.
 # @param storage
 # @param telemetry
 # @param token
-# @param total_keys
-#   Specify the total number of keys created to unseal Vault (Default: 5).
-# @param user
-#   Customise the user vault runs as, will also create the user unless `manage_user` is false.
 # @param vault_keys
 # @param vault_policies
-# @param version
-#   The version of Vault to install
-# @param manage_vault_utils
-#
-# Parameters
-# ----------
-# * `manage_vault_utils`
-#   Instruct puppet to manage the additional utilities like openssl and jq
 #
 # == PKI Options
 # * cert_params options
@@ -166,10 +170,9 @@ class vault (
   Integer                    $min_keys                  = 2,
   Integer                    $num_procs                 = $vault::params::num_procs,
   String                     $os                        = $vault::params::os,
-  Enum['present','installed','absent','purged','latest'] $package_ensure = 'installed',
+  Enum['present','installed','absent','purged','latest']  $package_ensure = 'installed',
   String                     $package_name              = 'vault',
   String                     $port                      = $vault::params::vault_port,
-  Optional[String]           $published_url             = undef,
   Boolean                    $purge_config_dir          = true,
   Optional[Hash]             $root_ca_config            = undef,
   Optional[Hash]             $seal                      = $vault::params::seal,
@@ -187,8 +190,8 @@ class vault (
   Optional[Hash]             $vault_policies            = $vault::params::default_policies,
   String                     $version                   = '1.3.2',
   Boolean                    $manage_vault_utils        = true,
+  Optional[String]           $published_url             = undef,
 ) inherits vault::params {
-  #
   $_download_url     = "${download_url_base}${version}"
   $_download_file    = "${package_name}_${version}_${os}_${arch}.${download_extension}"
   $real_download_url = pick($download_url, "${_download_url}/${_download_file}")

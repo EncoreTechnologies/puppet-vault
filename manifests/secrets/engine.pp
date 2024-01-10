@@ -1,4 +1,4 @@
-# @summary define class to manage secrets engine @ path
+# @summary Define class to manage secrets engine @ path
 #
 # @param action
 #   Optional list of actions [enable (default), disable, or tune]
@@ -10,10 +10,10 @@
 #   The path in vault to create/manage the specified engine.
 #
 define vault::secrets::engine (
-  Enum[enable,disable,tune]   $action         = enable,
-  Enum[kv,pki]                $engine         = undef,
-  Optional[Hash]              $options        = undef,
-  Optional[String]            $path           = $name,
+  Enum[enable,disable,tune]             $action         = enable,
+  Enum[kv,pki]                          $engine         = undef,
+  Optional[Hash]                        $options        = undef,
+  Optional[String]                      $path           = $name,
 ) {
   ## Parse options if defined
   if $options != undef {
@@ -40,7 +40,7 @@ define vault::secrets::engine (
   ## Perform selected action
   exec { "pki_enable_${path}":
     command  => $_secret_cmd,
-    path     => [$vault::bin_dir,'/bin','/usr/bin'],
+    path     => [$vault::bin_dir, '/bin', '/usr/bin'],
     unless   => $_check_secret_cmd,
     provider => 'shell',
   }

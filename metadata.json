@@ -8,11 +8,26 @@
   "project_page": "https://github.com/jsok/puppet-vault",
   "issues_url": "https://github.com/jsok/puppet-vault/issues",
   "dependencies": [
-    { "name": "puppet-hashi_stack", "version_requirement": ">= 2.0.0 < 3.0.0" },
-    { "name": "puppetlabs-stdlib", "version_requirement": ">= 4.24.0 < 9.0.0" },
-    { "name": "puppet-archive", "version_requirement": ">= 2.0.0 < 7.0.0" },
-    { "name": "puppet-systemd", "version_requirement": ">= 4.2.0 < 5.0.0" },
-    { "name": "stm-file_capability", "version_requirement": ">= 1.0.1 < 6.0.0" }
+    {
+      "name": "puppet-hashi_stack",
+      "version_requirement": ">= 2.0.0 < 3.0.0"
+    },
+    {
+      "name": "puppetlabs-stdlib",
+      "version_requirement": ">= 4.24.0 < 10.0.0"
+    },
+    {
+      "name": "puppet-archive",
+      "version_requirement": ">= 2.0.0 < 7.0.0"
+    },
+    {
+      "name": "puppet-systemd",
+      "version_requirement": ">= 3.1.0 < 5.0.0"
+    },
+    {
+      "name": "stm-file_capability",
+      "version_requirement": ">= 1.0.1 < 6.0.0"
+    }
   ],
   "operatingsystem_support": [
     {
@@ -26,6 +41,7 @@
     {
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
+        "8",
         "9"
       ]
     },
@@ -43,12 +59,6 @@
         "8",
         "9"
       ]
-    },
-    {
-      "operatingsystem": "CentOS",
-      "operatingsystemrelease": [
-        "7"
-      ]
     }
   ],
   "requirements": [
@@ -62,7 +72,7 @@
     "hashicorp",
     "secrets"
   ],
-  "pdk-version": "2.7.1",
-  "template-url": "pdk-default#2.7.4",
-  "template-ref": "tags/2.7.4-0-g58edf57"
+  "pdk-version": "3.0.1",
+  "template-url": "pdk-default#3.0.1",
+  "template-ref": "tags/3.0.1-0-gd13288a"
 }

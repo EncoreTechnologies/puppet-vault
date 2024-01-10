@@ -1,39 +1,6 @@
-# @summary This class is called from vault to enable vault LDAP authentication.
+# @summary Private define to configure vault LDAP authentication.
 #
-# @param bin_dir
-#   TODO
-# @param bind_dn
-#   TODO
-# @param bind_passwd
-#   TODO
-# @param group_attr
-#   TODO
-# @param group_dn
-#   TODO
-# @param group_filter
-#   TODO
-# @param group
-#   TODO
-# @param insecure_tls
-#   TODO
-# @param ldap_groups
-#   TODO
-# @param ldap_url
-#   TODO
-# @param ldap_servers
-#   TODO
-# @param starttls
-#   TODO
-# @param user_attr
-#   TODO
-# @param user_dn
-#   TODO
-# @param user
-#   TODO
-# @param vault_address
-#   TODO
-# @param vault_dir
-#   TODO
+# @api private
 #
 define vault::config::ldap (
   String           $bin_dir          = $vault::bin_dir,
@@ -55,6 +22,7 @@ define vault::config::ldap (
   String           $vault_address    = $vault::vault_address,
   String           $vault_dir        = $vault::install_dir,
 ) {
+#
   $_ldap_cert = "${vault_dir}/certs/${ldap_servers[0]}.crt"
 
   $_ldap_cert_cmd = @("EOC")
@@ -83,14 +51,14 @@ define vault::config::ldap (
   contain vault::config::unseal
 
   exec { "${ldap_servers[0]}.crt":
-    path     => ['/bin','/usr/bin'],
+    path     => ['/bin', '/usr/bin'],
     command  => $_ldap_cert_cmd,
     creates  => $_ldap_cert,
     provider => 'shell',
   }
 
   exec { 'vault_ldap_enable':
-    path     => [$bin_dir,'/bin','/usr/bin'],
+    path     => [$bin_dir, '/bin', '/usr/bin'],
     command  => $_ldap_auth_cmd,
     #environment => [ "VAULT_TOKEN=${vault_token}" ],
     unless   => $_ldap_auth_check_cmd,
@@ -125,7 +93,7 @@ define vault::config::ldap (
   }
 
   exec { "ldap_config_${name}":
-    path        => [$bin_dir,'/bin','/usr/bin'],
+    path        => [$bin_dir, '/bin', '/usr/bin'],
     command     => $_ldap_config_cmd,
     provider    => 'shell',
     #environment => [ "VAULT_TOKEN=${vault_token}" ],

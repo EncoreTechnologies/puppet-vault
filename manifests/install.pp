@@ -1,4 +1,4 @@
-# @summary Class vault::install
+# @summary Class to install vault.
 #
 class vault::install {
   $vault_bin = "${vault::install_dir}/bin/vault"

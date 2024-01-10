@@ -1,17 +1,6 @@
-# @summary Define to generate pki certificate
+# @summary Define class to generate pki certificates
 #
-# @api private == define class to generate pki certificates
-#
-# @param bin_dir
-# @param cert_options
-# @param cert_sn
-# @param common_name
-# @param is_int_ca
-# @param is_root_ca
-# @param path
-# @param pkey_mode
-# @param ttl
-# @param vault_dir
+# @api private 
 #
 define vault::pki::generate_cert (
   String                             $bin_dir          = $vault::bin_dir,
@@ -25,6 +14,7 @@ define vault::pki::generate_cert (
   String[1]                          $ttl              = '8760h',
   String                             $vault_dir        = $vault::install_dir,
 ) {
+#
   $cert_bundle = "${vault_dir}/certs/${path}.pem"
   $cert_key    = "${vault_dir}/certs/${path}.key"
   $cert_csr    = "${vault_dir}/certs/${path}.csr"
@@ -84,7 +74,7 @@ define vault::pki::generate_cert (
 
   exec { "clear_${path}":
     command     => $_clear_cert_cmd,
-    path        => [$bin_dir,'/bin','/usr/bin'],
+    path        => [$bin_dir, '/bin', '/usr/bin'],
     refreshonly => true,
     provider    => 'shell',
     notify      => Exec[$common_name],
@@ -93,7 +83,7 @@ define vault::pki::generate_cert (
   ## Export root CA certifcate
   exec { $common_name:
     command     => $_gen_cert_cmd,
-    path        => [$bin_dir,'/bin','/usr/bin'],
+    path        => [$bin_dir, '/bin', '/usr/bin'],
     refreshonly => true,
     provider    => 'shell',
   }
