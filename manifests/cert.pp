@@ -1,40 +1,71 @@
-# @summary a vault certificate that also amanges the ownership and mode of the generated
+# @summary a vault certificate that also manages the ownership and mode of the generated
 #          certificate files (for use on Linux)
+#
+# @param ensure
+# @param api_server
+# @param api_secret_role
+# @param common_name
+# @param alt_names
+# @param ip_sans
+# @param api_auth_method
+# @param api_auth_parameters
+# @param api_auth_path
+# @param api_auth_token
+# @param api_port
+# @param api_scheme
+# @param api_secret_engine
+# @param cert
+# @param cert_dir
+# @param cert_group
+# @param cert_owner
+# @param cert_mode
+# @param cert_name
+# @param cert_ttl
+# @param priv_key
+# @param priv_key_dir
+# @param priv_key_group
+# @param priv_key_owner
+# @param priv_key_mode
+# @param priv_key_name
+# @param manage_files
+# @param regenerate_ttl
+#
 define vault::cert (
-  String  $ensure,
-  String  $api_server,
-  String  $api_secret_role,
-  Optional[String] $common_name       = undef,
-  Optional[Array[String]] $alt_names  = undef,
-  Optional[Array[String]] $ip_sans    = undef,
+  String                   $ensure,
+  String                   $api_server,
+  String                   $api_secret_role,
+  Optional[String]         $common_name          = undef,
+  Optional[Array[String]]  $alt_names            = undef,
+  Optional[Array[String]]  $ip_sans              = undef,
   # API options
-  Optional[String] $api_auth_method   = undef,
-  Optional[Hash] $api_auth_parameters = undef,
-  Optional[String] $api_auth_path     = undef,
-  Optional[String] $api_auth_token    = undef,
-  Optional[Integer] $api_port         = undef,
-  Optional[String] $api_scheme        = undef,
-  Optional[String] $api_secret_engine = undef,
+  Optional[String]         $api_auth_method      = undef,
+  Optional[Hash]           $api_auth_parameters  = undef,
+  Optional[String]         $api_auth_path        = undef,
+  Optional[String]         $api_auth_token       = undef,
+  Optional[Integer]        $api_port             = undef,
+  Optional[String]         $api_scheme           = undef,
+  Optional[String]         $api_secret_engine    = undef,
   # Cert options
-  Optional[String] $cert            = undef,
-  Optional[String] $cert_dir        = undef,
-  String $cert_group                = 'root',
-  String $cert_owner                = 'root',
-  Stdlib::Filemode $cert_mode       = '0644',
-  Optional[String] $cert_name       = $title,
-  Optional[String] $cert_ttl        = undef,
+  Optional[String]         $cert                 = undef,
+  Optional[String]         $cert_dir             = undef,
+  String                   $cert_group           = 'root',
+  String                   $cert_owner           = 'root',
+  Stdlib::Filemode         $cert_mode            = '0644',
+  Optional[String]         $cert_name            = $title,
+  Optional[String]         $cert_ttl             = undef,
   # Private Key options
-  Optional[String] $priv_key        = undef,
-  Optional[String] $priv_key_dir    = undef,
-  Optional[String] $priv_key_group  = undef,
-  Optional[String] $priv_key_owner  = undef,
-  Stdlib::Filemode $priv_key_mode   = '0600',
-  Optional[String] $priv_key_name   = undef,
+  Optional[String]         $priv_key             = undef,
+  Optional[String]         $priv_key_dir         = undef,
+  Optional[String]         $priv_key_group       = undef,
+  Optional[String]         $priv_key_owner       = undef,
+  Stdlib::Filemode         $priv_key_mode        = '0600',
+  Optional[String]         $priv_key_name        = undef,
   # Other options
-  Boolean $manage_files             = true,
-  Optional[Integer] $regenerate_ttl = undef,
+  Boolean                  $manage_files         = true,
+  Optional[Integer]        $regenerate_ttl       = undef,
 ) {
   include vault::params
+
   $_cert_dir = pick($cert_dir, $vault::params::cert_dir)
   $_cert_path = stdlib::extname($cert_name) ? {
     ''      => "${_cert_dir}/${cert_name}.crt",

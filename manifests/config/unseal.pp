@@ -1,6 +1,6 @@
-# == Class vault::manage::unseal
+# @summary Private class to create unseal script for vault.
 #
-#  This class is called from vault to initialize vault after installation.
+# @api private
 #
 class vault::config::unseal (
   String                   $bin_dir           = $vault::bin_dir,
@@ -11,7 +11,7 @@ class vault::config::unseal (
   String                   $vault_user        = $vault::user,
   String                   $vault_group       = $vault::group,
 ) inherits vault {
-
+#
   file { "${vault_dir}/scripts":
     ensure => 'directory',
     owner  => $vault_user,
@@ -30,10 +30,9 @@ class vault::config::unseal (
 
   ## Unseal vault
   exec { "${vault_dir}/scripts/unseal.sh":
-    path     => [ $bin_dir, '/bin', '/usr/bin' ],
+    path     => [$bin_dir, '/bin', '/usr/bin'],
     require  => File["${vault_dir}/scripts/unseal.sh"],
     unless   => "${bin_dir}/vault status | grep -q 'Sealed.*false'",
     provider => 'shell',
   }
-
 }

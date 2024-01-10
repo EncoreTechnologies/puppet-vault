@@ -1,19 +1,24 @@
-# @api private == define class to create and configure root certificate of authority
+# @summary Define class to create and configure root certificate of authority
+#
+# @api private
+#
 define vault::pki::int_ca (
   Optional[Hash]      $cert_options          = undef,
   String              $common_name           = undef,
+  Optional[String]    $crl_url               = undef,
   Boolean             $enable_root_ca        = $vault::enable_root_ca,
+  Optional[String]    $issuer_url            = undef,
   Optional[Hash]      $options               = undef,
   String              $path                  = undef,
   Optional[String]    $role_name             = undef,
   Optional[Hash]      $role_options          = undef,
-  Optional[String]    $root_path             = 'root_ca',
-  Optional[Boolean]   $sign_intermediate     = true,
-  Optional[String]    $ttl                   = '8760h',
+  String              $root_path             = 'root_ca',
+  Boolean             $sign_intermediate     = true,
+  String              $ttl                   = '8760h',
   String              $vault_addr            = $vault::vault_address,
   String              $vault_dir             = $vault::install_dir,
 ) {
-
+#
   $cert_csr    = "${vault_dir}/certs/${path}.csr"
   $cert        = "${vault_dir}/certs/${path}.crt"
   $root_cert   = "${vault_dir}/certs/${root_path}.crt"
@@ -47,7 +52,7 @@ define vault::pki::int_ca (
     ## Sign the intermediate CA CSR
     exec { 'sign_cert':
       command  => $_sign_int_ca_cmd,
-      path     => [ $vault::bin_dir, '/bin', '/usr/bin' ],
+      path     => [$vault::bin_dir, '/bin', '/usr/bin'],
       #refreshonly => true,
       creates  => $cert,
       provider => 'shell',
@@ -61,7 +66,7 @@ define vault::pki::int_ca (
     ## Append Root CA to intermediate CA.
     exec { 'append_root_ca':
       command     => "cat ${root_cert} >> ${cert}",
-      path        => [ '/bin', '/usr/bin' ],
+      path        => ['/bin', '/usr/bin'],
       refreshonly => true,
       provider    => 'shell',
     }
@@ -69,26 +74,27 @@ define vault::pki::int_ca (
     ## Import signed intermediate CA certificate
     $_import_int_ca_cert = @("EOC")
       bash -lc "${vault::bin_dir}/vault write ${path}/intermediate/set-signed certificate=@${cert}"
-    | EOC
+      | EOC
 
     exec { 'import_cert':
       command     => $_import_int_ca_cert,
-      path        => [ $vault::bin_dir, '/bin', '/usr/bin' ],
+      path        => [$vault::bin_dir, '/bin', '/usr/bin'],
       refreshonly => true,
       provider    => 'shell',
       require     => Vault::Pki::Generate_cert[$path],
     }
   }
 
-  $_published_url = pick($published_url, $vault_addr)
+  $_issuer_url = pick($issuer_url, "http://${vault_addr}/v1/${path}/ca/pem")
+  $_crl_url    = pick($crl_url, "http://${vault_addr}/v1/${path}/crl/pem")
 
   ## Configure intermediate CA urls
   vault::pki::config { $path:
     action  => 'write',
     path    => "${path}/config/urls",
     options => {
-      'issuing_certificates'    => "$_published_url/v1/${path}/ca/pem",
-      'crl_distribution_points' => "$_published_url/v1/${path}/crl/pem",
+      'issuing_certificates'    => $_issuer_url,
+      'crl_distribution_points' => $_crl_url,
       #'ocsp_servers'           => (slice),
     },
   }
@@ -101,5 +107,4 @@ define vault::pki::int_ca (
       options => $role_options,
     }
   }
-
 }

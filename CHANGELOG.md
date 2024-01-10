@@ -5,6 +5,10 @@
   Contributed by Nick Maludy (@nmaludy)
   Contributed by Rick Paxton (@paxri01)
 
+## 2024-01-09 2.5.0
+- Rework issuer and CRL url logic.
+- PDK code cleanup.
+
 ## 2023-05-24 2.4.0
 - Added parameter for certificate published URLs.
 - Fix idempotency

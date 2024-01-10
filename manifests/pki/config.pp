@@ -1,10 +1,12 @@
-# == Class to configure pki path
+# @summary Define to configure pki path
+#
+# @api private
+#
 define vault::pki::config (
   String[1]             $action           = undef,
   Optional[Hash]        $options          = undef,
   String[1]             $path             = undef,
 ) {
-
   ## Unseal vault if needed
   contain vault::config::unseal
 
@@ -15,7 +17,7 @@ define vault::pki::config (
 
   $_config_cmd = @("EOC")
     bash -lc "${vault::bin_dir}/vault ${action} ${path} ${_options}"
-  | EOC
+    | EOC
 
   ## Used for idempotencey
   $_file_name = regsubst($path, '/', '_', 'G')
@@ -28,9 +30,8 @@ define vault::pki::config (
 
   exec { "${name}_cmd":
     command     => $_config_cmd,
-    path        => [ $vault::bin_dir, '/bin', '/usr/bin' ],
+    path        => [$vault::bin_dir, '/bin', '/usr/bin'],
     refreshonly => true,
     provider    => 'shell',
   }
-
 }

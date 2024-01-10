@@ -1,4 +1,7 @@
-# @api private == define class to generate pki certificates
+# @summary Define class to generate pki certificates
+#
+# @api private 
+#
 define vault::pki::generate_cert (
   String                             $bin_dir          = $vault::bin_dir,
   Optional[Hash]                     $cert_options     = undef,
@@ -7,11 +10,11 @@ define vault::pki::generate_cert (
   Boolean                            $is_int_ca        = false,
   Boolean                            $is_root_ca       = false,
   String[1]                          $path             = $name,
-  Optional[Enum[internal,exported]]  $pkey_mode        = 'exported',
+  Enum[internal,exported]            $pkey_mode        = 'exported',
   String[1]                          $ttl              = '8760h',
   String                             $vault_dir        = $vault::install_dir,
 ) {
-
+#
   $cert_bundle = "${vault_dir}/certs/${path}.pem"
   $cert_key    = "${vault_dir}/certs/${path}.key"
   $cert_csr    = "${vault_dir}/certs/${path}.csr"
@@ -29,17 +32,17 @@ define vault::pki::generate_cert (
     # Remove existing root certificate
     $_clear_cert_cmd = @("EOC")
       bash -lc "${bin_dir}/vault delete ${path}/root"
-    | EOC
+      | EOC
   } else {
     if ! empty($cert_sn) {
       # Revoke existing certificate
       $_clear_cert_cmd = @("EOC")
         bash -lc "${bin_dir}/vault write ${path}/revoke serial_number=${cert_sn}"
-      | EOC
+        | EOC
     } else {
       $_clear_cert_cmd = @("EOC")
         bash -lc "${bin_dir}/vault status"
-      | EOC
+        | EOC
     }
   }
 
@@ -71,7 +74,7 @@ define vault::pki::generate_cert (
 
   exec { "clear_${path}":
     command     => $_clear_cert_cmd,
-    path        => [ $bin_dir, '/bin', '/usr/bin' ],
+    path        => [$bin_dir, '/bin', '/usr/bin'],
     refreshonly => true,
     provider    => 'shell',
     notify      => Exec[$common_name],
@@ -80,9 +83,8 @@ define vault::pki::generate_cert (
   ## Export root CA certifcate
   exec { $common_name:
     command     => $_gen_cert_cmd,
-    path        => [ $bin_dir, '/bin', '/usr/bin' ],
+    path        => [$bin_dir, '/bin', '/usr/bin'],
     refreshonly => true,
     provider    => 'shell',
   }
-
 }

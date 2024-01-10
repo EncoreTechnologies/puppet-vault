@@ -1,4 +1,5 @@
-# == Class vault::service
+# @summary Class to manager vault service.
+#
 class vault::service {
   if $vault::manage_service {
     service { $vault::service_name:

@@ -1,14 +1,11 @@
-# == Class vault::params
-#
-# This class is meant to be called from vault.
-# It sets variables according to platform.
+# @summary Private class to configure parameters.
 #
 class vault::params {
   $install_dir        = '/opt/vault'
-  $num_procs          = $facts['processorcount']
+  $num_procs          = $facts['processors']['count']
   $ip_address         = $facts['networking']['ip']
   $vault_port         = '8200'
-  $storage            = { 'file' => { 'path' => '/var/lib/vault' }}
+  $storage            = { 'file' => { 'path' => '/var/lib/vault' } }
   $manage_storage_dir = false
 
   $listener = [
@@ -41,11 +38,11 @@ class vault::params {
 
   $service_provider = $facts['service_provider']
 
-  case $facts['architecture'] {
+  case $facts['os']['architecture'] {
     /(x86_64|amd64|x64)/: { $arch = 'amd64' }
-    /(i386|x86)/:         { $arch = '386'   }
-    /^arm.*/:             { $arch = 'arm'   }
-    default: { fail("Unsupported kernel architecture: ${facts['architecture']}") }
+    /(i386|x86)/:         { $arch = '386' }
+    /^arm.*/:             { $arch = 'arm' }
+    default: { fail("Unsupported kernel architecture: ${facts['os']['architecture']}") }
   }
 
   case $facts['os']['family'] {
@@ -96,15 +93,15 @@ class vault::params {
       'path' => {
         'auth/*'   => {
           comment      => 'Manage auth methods broadly across Vault',
-          capabilities => [ 'create','read','update','delete','list','sudo' ],
+          capabilities => ['create','read','update','delete','list','sudo'],
         },
         'sys/*'    => {
           comment      => 'List, create, update, and delete sys mounts.',
-          capabilities => [ 'create','read','update','delete','list','sudo' ],
+          capabilities => ['create','read','update','delete','list','sudo'],
         },
         'secret/*' => {
           comment      => 'List, create, update, and delete sys mounts.',
-          capabilities => [ 'create','read','update','delete','list','sudo' ],
+          capabilities => ['create','read','update','delete','list','sudo'],
         },
       }, # end paths
     }, # end admin policy
@@ -112,18 +109,17 @@ class vault::params {
       'path' => {
         'auth/*'   => {
           comment      => 'List and read auth methods',
-          capabilities => [ 'read','list' ],
+          capabilities => ['read','list'],
         },
         'sys/*'    => {
           comment      => 'List and read sys mounts.',
-          capabilities => [ 'read','list' ],
+          capabilities => ['read','list'],
         },
         'secret/*' => {
           comment      => 'List and read secret mounts.',
-          capabilities => [ 'read','list' ],
+          capabilities => ['read','list'],
         },
       }, # end paths
     }, # end user policy
   } # end vault policies
-
 }

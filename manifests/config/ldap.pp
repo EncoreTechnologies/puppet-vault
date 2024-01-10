@@ -1,6 +1,6 @@
-# == Class vault::ldap
+# @summary Private define to configure vault LDAP authentication.
 #
-#  This class is called from vault to enable vault LDAP authentication.
+# @api private
 #
 define vault::config::ldap (
   String           $bin_dir          = $vault::bin_dir,
@@ -22,7 +22,7 @@ define vault::config::ldap (
   String           $vault_address    = $vault::vault_address,
   String           $vault_dir        = $vault::install_dir,
 ) {
-
+#
   $_ldap_cert = "${vault_dir}/certs/${ldap_servers[0]}.crt"
 
   $_ldap_cert_cmd = @("EOC")
@@ -34,11 +34,11 @@ define vault::config::ldap (
   $_ldap_auth_check_cmd = @("EOC")
     bash -lc "${bin_dir}/vault auth list -format=json |\
       jq '.[] | {message: .type}' | grep -q 'ldap'"
-  | EOC
+    | EOC
 
   $_ldap_auth_cmd = @("EOC")
     bash -lc "${bin_dir}/vault auth enable ldap"
-  | EOC
+    | EOC
 
   if $ldap_url == undef {
     $_ldap_url = $ldap_servers.map |$server| { "ldap://${server}" }.join(',')
@@ -51,14 +51,14 @@ define vault::config::ldap (
   contain vault::config::unseal
 
   exec { "${ldap_servers[0]}.crt":
-    path     => [ '/bin', '/usr/bin' ],
+    path     => ['/bin', '/usr/bin'],
     command  => $_ldap_cert_cmd,
     creates  => $_ldap_cert,
     provider => 'shell',
   }
 
   exec { 'vault_ldap_enable':
-    path     => [ $bin_dir, '/bin', '/usr/bin' ],
+    path     => [$bin_dir, '/bin', '/usr/bin'],
     command  => $_ldap_auth_cmd,
     #environment => [ "VAULT_TOKEN=${vault_token}" ],
     unless   => $_ldap_auth_check_cmd,
@@ -79,7 +79,7 @@ define vault::config::ldap (
       groupdn='${group_dn}' \
       groupattr='${group_attr}' \
       groupfilter='${group_filter}'"
-  | EOC
+    | EOC
 
   $_safe_ldap_cmd = regsubst($_ldap_config_cmd, "bindpass='.* ", "bindpass='********' ",)
 
@@ -93,7 +93,7 @@ define vault::config::ldap (
   }
 
   exec { "ldap_config_${name}":
-    path        => [ $bin_dir, '/bin', '/usr/bin' ],
+    path        => [$bin_dir, '/bin', '/usr/bin'],
     command     => $_ldap_config_cmd,
     provider    => 'shell',
     #environment => [ "VAULT_TOKEN=${vault_token}" ],
@@ -103,5 +103,4 @@ define vault::config::ldap (
   if $ldap_groups != undef {
     create_resources ('vault::config::ldap_groups', $ldap_groups)
   }
-
 }
