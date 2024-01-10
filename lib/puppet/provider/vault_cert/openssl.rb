@@ -109,10 +109,10 @@ Puppet::Type.type(:vault_cert).provide(:openssl, parent: Puppet::Provider::Vault
       cert_ca_chain = cert['data']['ca_chain']
       if cert_ca_chain.is_a?(Array)
         for ca in cert_ca_chain
-          signed_cert += ca
           if not signed_cert.end_with?("\n")
             signed_cert += "\n"
           end
+          signed_cert += ca
         end
       else
         signed_cert += cert_ca_chain

@@ -1,7 +1,10 @@
 ## Development
 
+## 2024-01-09 2.6.0
+- Fixing certificate to contain whole CA chain that is returned
+  as apart of the API call.
+  Contributed by Bradley Bishop (@bishopbm1)
 - Switch from Travis to GitHub Actions
-
   Contributed by Nick Maludy (@nmaludy)
 
 ## 2023-10-15 2.5.0
