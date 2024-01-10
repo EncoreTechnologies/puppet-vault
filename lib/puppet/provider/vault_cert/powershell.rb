@@ -58,6 +58,22 @@ Puppet::Type.type(:vault_cert).provide(:powershell, parent: Puppet::Provider::Va
       Puppet.debug('creating from new cert from vault')
       new_cert = create_cert
       cert = new_cert['data']['certificate']
+
+      # append the CA chain to the signed cert
+      if new_cert['data'].has_key?('ca_chain')
+        cert_ca_chain = new_cert['data']['ca_chain']
+        if cert_ca_chain.is_a?(Array)
+          for ca in cert_ca_chain
+            if not cert.end_with?("\n")
+              cert += "\n"
+            end
+            cert += ca
+          end
+        else
+          cert += cert_ca_chain
+        end
+      end
+
       priv_key = new_cert['data']['private_key']
     end
 
