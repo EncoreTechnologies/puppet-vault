@@ -76,6 +76,68 @@ module PuppetX::Encore::Vault
       post(api_path, body: payload)
     end
 
+    def create_cert_csr(common_name:,
+                        ttl:,
+                        alt_names: nil,
+                        ip_sans: nil,
+                        cert_organization: nil,
+                        ou: nil,
+                        country: nil,
+                        locality: nil,
+                        province: nil,
+                        key_format: 'pem',
+                        private_key_format: 'der',
+                        key_type: 'ec',
+                        key_bits: '256',
+                        signature_bits: '256')
+      Puppet.notice("cert_organization: #{cert_organization}")
+      csr_api_path = '/v1/int_ca/intermediate/generate/exported'
+      csr_payload = {
+        common_name: common_name,
+        format: key_format,
+        private_key_format: private_key_format,
+        key_type: key_type,
+        key_bits: key_bits,
+        signature_bits: signature_bits,
+        organization: cert_organization,
+        ou: ou,
+        country: country,
+        locality: locality,
+        province: province,
+      }
+      csr_payload[:alt_names] = alt_names.join(',') if alt_names
+      csr_payload[:ip_sans] = ip_sans.join(',') if ip_sans
+
+      csr_response = post(csr_api_path, body: csr_payload)
+      cert_csr = csr_response['data']['csr']
+
+      api_path = '/v1' + @api_secret_engine + '/sign/' + @api_secret_role
+      payload = {
+        csr: cert_csr,
+        common_name: common_name,
+        ttl: ttl,
+      }
+      # Check if any Subject Alternative Names were given
+      # Check if any IP Subject Alternative Names were given
+      payload[:alt_names] = alt_names.join(',') if alt_names
+      payload[:ip_sans] = ip_sans.join(',') if ip_sans
+
+      cert_response = post(api_path, body: payload)
+
+      return_cert = {
+        'data' => {
+          'certificate' => cert_response['data']['certificate'],
+          'private_key' => csr_response['data']['private_key'],
+          'serial_number' => cert_response['data']['serial_number'],
+          'expiration' => cert_response['data']['expiration'],
+          'ca_chain' => cert_response['data']['ca_chain'],
+          'private_key_type' => csr_response['data']['private_key_type'],
+        },
+      }
+
+      return return_cert
+    end
+
     def revoke_cert(serial_number)
       api_path = '/v1' + @api_secret_engine + '/revoke'
       payload = { serial_number: format_serial_number(serial_number) }

@@ -15,6 +15,17 @@ type Vault::CertParams = Struct[
     api_secret_engine   => Optional[String],
     cert_ttl            => Optional[String],
     regenerate_ttl      => Optional[Integer],
+    manual_csr          => Optional[Boolean],
     serial_number       => Optional[String],
+    cert_organization   => Optional[String],
+    ou                  => Optional[String],
+    country             => Optional[String],
+    locality            => Optional[String],
+    province            => Optional[String],
+    key_format          => Optional[String],
+    private_key_format  => Optional[String],
+    key_type            => Optional[String],
+    key_bits            => Optional[String],
+    signature_bits      => Optional[String],
   }
 ]
