@@ -101,6 +101,17 @@ Puppet::Functions.create_function(:'vault::cert') do
     api_secret_engine = params.fetch('api_secret_engine', '/pki')
     cert_ttl          = params.fetch('cert_ttl',          '720h')
     regenerate_ttl    = params.fetch('regenerate_ttl',    3)
+    manual_csr        = params.fetch('manual_csr',    false)
+    cert_organization      = params.fetch('cert_organization',    nil)
+    ou                = params.fetch('ou',    nil)
+    country           = params.fetch('country',    nil)
+    locality          = params.fetch('locality',    nil)
+    province          = params.fetch('province',    nil)
+    key_format        = params.fetch('key_format',    'pem')
+    private_key_format = params.fetch('private_key_format',    'der')
+    key_type          = params.fetch('key_type',    'ec')
+    key_bits          = params.fetch('key_bits',    '256')
+    signature_bits    = params.fetch('signature_bits',    '256')
     serial_number     = find_cert_serial_number(params)
     client = PuppetX::Encore::Vault::Client.new(api_server: api_server,
                                                 api_port: api_port,
@@ -154,8 +165,16 @@ Puppet::Functions.create_function(:'vault::cert') do
     if new_cert_needed
       Puppet.debug('new cert is needed, creating one')
       common_name ||= cert_name
-      resp = client.create_cert(common_name: common_name, alt_names: alt_names,
-                                ip_sans: ip_sans, ttl: cert_ttl)
+      if manual_csr
+        resp = client.create_cert_csr(common_name: common_name, alt_names: alt_names,
+                                      ip_sans: ip_sans, ttl: cert_ttl, cert_organization: cert_organization,
+                                      ou: ou, country: country, locality: locality, province: province,
+                                      key_format: key_format, private_key_format: private_key_format,
+                                      key_type: key_type, key_bits: key_bits, signature_bits: signature_bits)
+      else
+        resp = client.create_cert(common_name: common_name, alt_names: alt_names,
+                                  ip_sans: ip_sans, ttl: cert_ttl)
+      end
       cert = resp['data']['certificate']
       priv_key = resp['data']['private_key']
     end
